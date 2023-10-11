@@ -1,25 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
-
+import StateCard from "./components/StateCard";
+import ControlPanel from "./components/ControlPanel";
+import {useEffect, useState} from "react";
+import MessageContext from "./store/MessageStore";
 function App() {
+  const [messages, setMessages] = useState(null)
+  useEffect(()=>{
+    var m = {author: "JHON SMITH", messageId:"https://ya.ru", message: "Hi! i'm using our app!", avatar:"https://images.ctfassets.net/a31yf9ord487/2FqwEAMWdh6lwsUX1Yiwpx/6890134030f948fafb161794d45ae60d/default_female.jpg"}
+    setMessages([m,m,m,m,m])
+  }, [null])
+  function add(m){
+    setMessages([m,...messages])
+  }
+
+  function dropAt(index){
+    messages.splice(index,1)
+    setMessages([...messages])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div>
+      <MessageContext.Provider value = {{add, dropAt}}>
+          <ControlPanel/>
+      </MessageContext.Provider>
+        <MessageContext.Provider value={{messages}}>
+          <div>
+            <h1>IMCOME MESSAGES</h1>
+            <StateCard />
+          </div>
+        </MessageContext.Provider>
+      </div>
+);
 }
 
 export default App;
